@@ -121,7 +121,7 @@ if has("persistent_undo") " Persistent undo
     if !isdirectory(target_path)
         call mkdir(target_path, "p", 0700)
     endif
-    let undodir=target_path
+    let &undodir=target_path
     set undofile
 endif
 nnoremap <leader>uu :UndotreeToggle<CR>:UndotreeFocus<CR>
