@@ -16,6 +16,7 @@ Plug 'jiangmiao/auto-pairs' " Insert or delete brackets, parens, quotes in pair
 Plug 'dense-analysis/ale' "ALE (Asynchronous Lint Engine) is a plugin providing linting (syntax checking and semantic errors)
 Plug 'preservim/nerdcommenter' " Comment functions so powerful—no comment necessary
 Plug 'davidhalter/jedi-vim' " jedi-vim is a VIM binding to the autocompletion library Jedi
+Plug 'puremourning/vimspector' " A multi language graphical debugger for Vim
 
 call plug#end()
 
@@ -63,6 +64,9 @@ let mapleader=" "
 set path+=**
 set wildmenu
 
+" Remain some lines for scroll
+set scrolloff=8
+
 " basic remap for switch windows
 nnoremap <leader>ww <C-W><C-W>
 nnoremap <leader>wh <C-W>h
@@ -76,15 +80,32 @@ nnoremap <leader>wL <C-W>L
 nnoremap <leader>wc <C-W>c
 nnoremap <leader>wt <C-W>T
 
+" remap for fast tab switch
+nnoremap <leader>1 1gt
+nnoremap <leader>2 2gt
+nnoremap <leader>3 3gt
+nnoremap <leader>4 4gt
+nnoremap <leader>5 5gt
+nnoremap <leader>6 6gt
+nnoremap <leader>7 7gt
+nnoremap <leader>8 8gt
+nnoremap <leader>9 9gt
+nnoremap <leader>0 :tablast<cr>
+
 " terminal key remap
 tnoremap <esc><esc> <c-\><c-n>
-tnoremap <M-h> <c-\><c-n><c-w>h
-tnoremap <M-j> <c-\><c-n><c-w>j
-tnoremap <M-k> <c-\><c-n><c-w>k
-tnoremap <M-l> <c-\><c-n><c-w>l
+tnoremap <esc>w <C-W><C-W>
+tnoremap <esc>: <C-W>:
+tnoremap <esc>h <C-W>h
+tnoremap <esc>j <C-W>j
+tnoremap <esc>k <C-W>k
+tnoremap <esc>l <C-W>l
 
 " disable automatic comment insertion, to disable for all files and sessions
 autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
+
+" filetype
+autocmd BufNewFile,BufRead CMakeLists.txt set filetype=cmake
 
 """"""""""""""""""""""""""""""
 " Plugin Settings
@@ -131,9 +152,11 @@ let g:ale_sign_error = 'x'
 let g:ale_sign_warning = '!'
 let g:ale_lint_on_enter = 0
 let g:ale_lint_on_text_changed = 'never'
+let g:ale_lint_on_insert_leave = 0
 let g:ale_linters = {
 \   'c++': ['cc'],
 \   'c': ['cc'],
+\   'python': ['pylint'],
 \}
 nmap  <silent> <leader>ll <ESC>:ALELint<CR>
 nmap  <silent> <leader>lp <Plug>(ale_previous_wrap)
@@ -147,3 +170,12 @@ nmap  <silent> <leader>lr <Plug>(ale_find_references)
 " nerdcommenter
 let g:NERDDefaultAlign = 'left' " Align line-wise comment delimiters flush left instead of following code indentation
 let g:NERDSpaceDelims = 1 " Add spaces after comment delimiters by default
+
+" vimspector
+let g:vimspector_enable_mappings = 'HUMAN'
+nnoremap <Leader>dd :call vimspector#Launch()<CR>
+nnoremap <Leader>dx :call vimspector#Reset()<CR>
+" for normal mode - the word under the cursor
+nmap <Leader>di <Plug>VimspectorBalloonEval
+" for visual mode, the visually selected text
+xmap <Leader>di <Plug>VimspectorBalloonEval
